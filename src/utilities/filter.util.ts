@@ -1,46 +1,84 @@
-// import { Injectable } from '@nestjs/common';
-// import { Criteria, Filter, QueryBuilder, WhereConditions } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { Filter, Sort } from 'src/room/dto/interfaces';
+import { SelectQueryBuilder } from 'typeorm';
 
-// @Injectable()
-// export class FilterUtil {
-//   static paginate(qb: QueryBuilder<any>, page: number, limit: number) {
-//     return qb.skip(page * limit).take(limit);
-//   }
+@Injectable()
+export class FilterUtil {
 
-//   static filterBy(qb: QueryBuilder<any>, filters: Filter[]): QueryBuilder<any> {
-//     const conditions: WhereConditions = filters.reduce((prev, filter) => {
-//       const { field, operator, value } = filter;
-//       switch (operator) {
-//         case 'equals':
-//           prev[field] = value;
-//           break;
-//         case 'not':
-//           prev[field] = LessThanOrEqualThan(value);
-//           break;
-//         case 'gt':
-//           prev[field] = MoreThan(value);
-//           break;
-//         // Implement other operators as needed
-//         default:
-//           break;
-//       }
-//       return prev;
-//     }, {} as WhereConditions);
-//     return qb.where(conditions);
-//   }
+    /**
+     * @description This is a utility function that paginates results from a query
+     * @param qb QueryBuilder instace
+     * @param page page number needed
+     * @param limit limit needed per page
+     * @returns returns a paginated QueryBuilder
+     */
+    static paginate(qb: SelectQueryBuilder<any>, page: number, limit: number): SelectQueryBuilder<any> {
+        return qb.offset(page).limit(limit);
+    }
 
-//   static sortBy(qb: QueryBuilder<any>, sort: { field: string; order: 'ASC' | 'DESC' }[]) {
-//     sort.forEach((sortOption) => {
-//       qb.orderBy(sortOption.field, sortOption.order);
-//     });
-//     return qb;
-//   }
-// }
 
-// function MoreThan(value: number | Date) {
-//   return '>' + value;
-// }
+    /**
+     * @description This is a utility function that sorts the given table in ascending or descending order
+     * @param qb QueryBuilder instace 
+     * @param sort sort object array containing sort option
+     * @param tableName name of table to run query on
+     * @returns returns a sorted QueryBuilder 
+     */
+    static sortBy(qb: SelectQueryBuilder<any>, sort: Sort[], tableName: string,): SelectQueryBuilder<any> {
+        sort.forEach(({ field, order }) => {
+            qb.addOrderBy(`${tableName}.${field}`, order);
+        });
+        return qb;
+    }
 
-// function LessThanOrEqualThan(value: number | Date) {
-//   return '<=' + value;
-// }
+    /**
+     * 
+     * @param qb QueryBuilder instace
+     * @param filters filter object array containing filter options
+     * @param tableName Name of table to run query on
+     * @returns returns a filtered QueryBuilder 
+     */
+
+    static filterBy(qb: SelectQueryBuilder<any>, filters: Filter[], tableName: string): SelectQueryBuilder<any> {
+        filters.forEach(({ field, value, operator }) => {
+            switch (operator) {
+                case 'equals':
+                    qb.where(`${tableName}.${field} = :${field}`, { [field]: value });
+                    break;
+                case 'not':
+                    qb.where(`${tableName}.${field} != :${field}`, { [field]: value });
+                    break;
+                case 'gt':
+                    qb.where(`${tableName}.${field} > :${field}`, { [field]: value });
+                    break;
+                case 'gte':
+                    qb.where(`${tableName}.${field} >= :${field}`, { [field]: value });
+                    break;
+                case 'lt':
+                    qb.where(`${tableName}.${field} < :${field}`, { [field]: value });
+                    break;
+                case 'lte':
+                    qb.where(`${tableName}.${field} <= :${field}`, { [field]: value });
+                    break;
+                case 'like':
+                    qb.where(`${tableName}.${field} like :${field}`, { [field]: `%${value}%` });
+                    break;
+                case 'in':
+                    qb.where(`${tableName}.${field} IN (:...${field})`, { [field]: value });
+                    break;
+                case 'notIn':
+                    qb.where(`${tableName}.${field} NOT IN (:...${field})`, { [field]: [value] });
+                    break;
+                case 'isNull':
+                    qb.where(`${tableName}.${field} IS NULL`);
+                    break;
+                case 'isNotNull':
+                    qb.where(`${tableName}.${field} IS NOt NULL`);
+                    break;
+                default:
+                    throw new Error(`Unsupported operator: ${operator}`);
+            }
+        })
+        return qb
+    }
+}

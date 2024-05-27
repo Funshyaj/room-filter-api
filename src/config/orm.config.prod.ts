@@ -6,12 +6,13 @@ export default registerAs(
     'orm.config',
     (): TypeOrmModuleOptions => ({
         type: 'postgres',
-        host: '<YOUR_HOST>',
+        host: process.env.PROD_HOST,
         port: 5432,
-        username: '<YOUR_PRODUCTION_DATABASE_USERNAME>',
-        password: '<YOUR_PRODUCTION_DATABASE_PASSWORD>',
-        database: 'goaltracker-db',
+        username: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DATABASE,
         entities: [Room],
+        ssl: true,
         synchronize: false, // Disable this always in production
     }),
 );

@@ -6,6 +6,6 @@ export class AppService {
   constructor(private readonly configService: ConfigService) { }
 
   getHello(): string {
-    return this.configService.get('API_TOKEN')
+    return 'Hello'
   }
 }

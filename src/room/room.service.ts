@@ -1,51 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { FilterUtil } from '../utilities/filter.util';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Room } from './entities/room.entity';
+import { CreateRoomDto } from './dto/create-room.dto';
+import { Filter, Queries, Result, Sort } from './dto/interfaces';
+
 
 @Injectable()
 export class RoomService {
-  // findAll(pageNumber, limit) {
-  findAll(filters) {
-    return filters
+  constructor(@InjectRepository(Room) private readonly roomRepository: Repository<Room>,
+  ) { }
+
+  async findAll({ page, limit, filters, sort }: Queries)
+    : Promise<Result> {
+    const paginationNumber = page || 0  // first page by default
+    const paginationLimit = limit || 10 // limits the result by default
+
+    const queryBuilder = this.roomRepository.createQueryBuilder('room');
+
+    if (filters && filters.length > 0) {
+      const parsedFilters: Filter[] = JSON.parse(filters)
+      FilterUtil.filterBy(queryBuilder, parsedFilters, 'room')
+    }
+
+    if (sort && sort.length > 0) {
+      const parsedSorts: Sort[] = JSON.parse(sort)
+      FilterUtil.sortBy(queryBuilder, parsedSorts, 'room')
+    }
+
+    // Applying pagination
+    FilterUtil.paginate(queryBuilder, paginationNumber, paginationLimit)
+    const result = await queryBuilder.getMany();
+
+    return {
+      result,
+      page: paginationNumber,
+      limit: paginationLimit
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} room`;
+  async findOne(id: number): Promise<Room> {
+    const roomData =
+      await this.roomRepository.findOneBy({ id });
+    if (!roomData) {
+      throw new HttpException(
+        'Room Not Found',
+        404,
+      );
+    }
+    return roomData;
+  }
+
+  async createRoom(createRoomDto: CreateRoomDto): Promise<Room> {
+    const roomData = this.roomRepository.create(createRoomDto);
+    await this.roomRepository.save(roomData);
+    return roomData
   }
 }
-
-// import { Injectable, NotFoundException } from '@nestjs/common';
-// // import { FilterUtil, Filter } from './filter.util';
-// // import { PaginationDto } from './pagination.dto';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { EntityRepository } from 'typeorm';
-
-// @Injectable()
-// // export class BaseService<T> {
-// export class RoomService {
-//   constructor(
-//     @InjectRepository(EntityRepository)
-//     private readonly repository: EntityRepository<T>,
-//   ) { }
-
-//   async findAll(
-//     filters: Filter[],
-//     // pagination: PaginationDto,
-//     // sort?: { field: string; order: 'ASC' | 'DESC' }[],
-//   ) {
-//     // const qb = this.repository.createQueryBuilder('entity');
-//     // const { page, limit } = pagination;
-//     // FilterUtil.filterBy(qb, filters);
-//     // FilterUtil.sortBy(qb, sort || []);
-//     // FilterUtil.paginate(qb, page, limit);
-
-//     // const data = await qb.getMany();
-//     // if (!data.length) {
-//     //   throw new NotFoundException('No records found');
-//     // }
-//     return 'works';
-//   }
-
-//   findOne(id: number) {
-//     //     return `This action returns a #${id} room`;
-//     //   }
-// }
-// }
