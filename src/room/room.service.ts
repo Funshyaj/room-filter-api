@@ -12,11 +12,7 @@ export class RoomService {
   constructor(@InjectRepository(Room) private readonly roomRepository: Repository<Room>,
   ) { }
 
-  async findAll({ page, limit, filters, sort }: Queries)
-    : Promise<Result> {
-    const paginationNumber = page || 0  // first page by default
-    const paginationLimit = limit || 10 // limits the result by default
-
+  async findAll({ page, limit, filters, sort }: Queries): Promise<Result> {
     const queryBuilder = this.roomRepository.createQueryBuilder('room');
 
     if (filters && filters.length > 0) {
@@ -29,14 +25,16 @@ export class RoomService {
       FilterUtil.sortBy(queryBuilder, parsedSorts, 'room')
     }
 
-    // Applying pagination
-    FilterUtil.paginate(queryBuilder, paginationNumber, paginationLimit)
-    const result = await queryBuilder.getMany();
+    if (page && limit) {
+      FilterUtil.paginate(queryBuilder, page, limit)
+    }
 
+    const result = await queryBuilder.getMany();
     return {
       result,
-      page: paginationNumber,
-      limit: paginationLimit
+      page,
+      limit,
+      count: result.length
     }
   }
 

@@ -20,6 +20,7 @@ export interface Filter {
 
 export interface Result {
     result: Room[],
-    page: number | string
-    limit: number | string
+    count: number | string
+    page?: number | string
+    limit?: number | string
 }
