@@ -1,30 +1,9 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Room Filter Api
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a submission for a take home test
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Hosted with render at [https://room-filter-api.onrender.com/api/](https://room-filter-api.onrender.com/api/)
+- Local host at `http://localhost:4000/api/`
 
 ## Installation
 
@@ -32,20 +11,35 @@
 $ npm install
 ```
 
-## Running the app
+## Run Locally
+
+Clone the project
+
+Install dependencies
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+  npm install
 ```
 
-## Test
+Create a `.env` file and add the your localhost postgress database name and password
+`DATABASE: ''
+LOCAL_PASSWORD: ''`
+
+Start the server
+
+```bash
+  npm run start
+```
+
+or
+
+Start the server in watch mode
+
+```bash
+  npm run start:dev
+```
+
+<!-- ## Run Tests
 
 ```bash
 # unit tests
@@ -54,19 +48,66 @@ $ npm run test
 # e2e tests
 $ npm run test:e2e
 
-# test coverage
-$ npm run test:cov
+``` -->
+
+## API Reference
+
+#### Get all rooms
+
+```http
+  GET /api/rooms
 ```
 
-## Support
+#### Paginate rooms
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```http
+  GET /api/rooms?page=1&limit=5
+```
 
-## Stay in touch
+#### Sort rooms
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```http
+  GET /api/rooms?sort=[{feild:"feild-to-sort-by", order:"ASC or DESC"}]
+```
+
+#### filter rooms
+
+```http
+  GET /api/rooms?filter=[{"field":"userId","value":1,"operator":"equals"}]
+```
+
+### Get room by Id
+
+```http
+  GET /api/items/${id}
+```
+
+## Filter Utility module
+
+#### How to use
+
+Import filter utility in a service and call the needed functions on
+
+- FilterUtil.paginate()
+  This is a utility function that paginates results from a query, it takes three parameters and returns the paginated query builder
+
+1. qb: SelectQueryBuilder
+2. page: number
+3. limit: number
+
+- FilterUtil.sortBy()
+  This is a utility function that sorts the given table in ascending or descending order, it takes three parameters and returns a sorted QueryBuilder
+
+1. qb: SelectQueryBuilder
+2. sort: Sort[],
+3. tableName: string
+
+- FilterUtil.filter()
+  This is a utility function that filter the given table based on filter operators such as: 'gt (greater than)', 'lt (less than) and more. It takes three parameters and returns a filtered queryBulder
+
+1. qb: SelectQueryBuilder<any>
+2. filters: Filter[]
+3. tableName: string
 
 ## License
 
