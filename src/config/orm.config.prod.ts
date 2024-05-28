@@ -12,7 +12,6 @@ export default registerAs(
         password: process.env.DB_PASSWORD,
         database: process.env.DATABASE,
         entities: [Room],
-        // ssl: true,
         synchronize: false, // Disable this always in production
     }),
 );

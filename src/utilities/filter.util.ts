@@ -24,7 +24,7 @@ export class FilterUtil {
      * @param tableName name of table to run query on
      * @returns returns a sorted QueryBuilder 
      */
-    static sortBy(qb: SelectQueryBuilder<any>, sort: Sort[], tableName: string,): SelectQueryBuilder<any> {
+    static sortBy(qb: SelectQueryBuilder<any>, sort: Sort[], tableName: string): SelectQueryBuilder<any> {
         sort.forEach(({ field, order }) => {
             qb.addOrderBy(`${tableName}.${field}`, order);
         });
@@ -32,7 +32,8 @@ export class FilterUtil {
     }
 
     /**
-     * 
+     * @
+     * @description This is a utility function that filter the given table based on filter operators such as: 'gt (greater than)', 'lt (less than) and more...
      * @param qb QueryBuilder instace
      * @param filters filter object array containing filter options
      * @param tableName Name of table to run query on
