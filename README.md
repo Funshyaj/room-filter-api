@@ -61,19 +61,19 @@ $ npm run test:e2e
 
 #### Sort rooms
 
-```http
+```
   GET /api/rooms?sort=[{feild:"feild-to-sort-by", order:"ASC or DESC"}]
 ```
 
 #### filter rooms
 
-```http
+```
   GET /api/rooms?filter=[{"field":"userId","value":1,"operator":"equals"}]
 ```
 
 ### Get room by Id
 
-```http
+```
   GET /api/rooms/${id}
 ```
 
