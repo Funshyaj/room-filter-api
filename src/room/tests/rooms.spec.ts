@@ -23,32 +23,6 @@ describe('RoomController', () => {
             })
             ],
         }).compile()
-        // {
-        //     provide: RoomService,
-        //     useValue: {
-        //   findAll: jest.fn().mockResolvedValue([
-        //     {
-        //       firstName: 'firstName #1',
-        //       lastName: 'lastName #1',
-        //     },
-        //     {
-        //       firstName: 'firstName #2',
-        //       lastName: 'lastName #2',
-        //     },
-        //   ]),
-        // findOne: jest.fn().mockImplementation((id: string) =>
-        //     Promise.resolve(
-        //         {
-        //             "id": 9,
-        //             "name": "Board Room G",
-        //             "capacity": 12,
-        //             "userId": 10
-        //         },
-        //     ),
-        // ),
-        // remove: jest.fn(),
-        //         },
-        // },
 
         roomService = moduleRef.get<RoomService>(RoomService);
         roomController = moduleRef.get<RoomController>(RoomController);
