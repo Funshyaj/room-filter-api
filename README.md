@@ -5,12 +5,6 @@ This is a submission for a take home test
 - Hosted with render at [https://room-filter-api.onrender.com/api/](https://room-filter-api.onrender.com/api/)
 - Local host at `http://localhost:4000/api/`
 
-## Installation
-
-```bash
-$ npm install
-```
-
 ## Run Locally
 
 Clone the project
@@ -21,9 +15,10 @@ Install dependencies
   npm install
 ```
 
-Create a `.env` file and add the your localhost postgress database name and password
-`DATABASE: ''
-LOCAL_PASSWORD: ''`
+Create a `.env` file and add your localhost postgress database name and password
+
+- `DATABASE: ''`
+- `LOCAL_PASSWORD: ''`
 
 Start the server
 
@@ -61,7 +56,7 @@ $ npm run test:e2e
 #### Paginate rooms
 
 ```http
-  GET /api/rooms?page=1&limit=5
+  GET /api/rooms?page=0&limit=10
 ```
 
 #### Sort rooms
@@ -79,10 +74,16 @@ $ npm run test:e2e
 ### Get room by Id
 
 ```http
-  GET /api/items/${id}
+  GET /api/rooms/${id}
 ```
 
-## Filter Utility module
+### Get room by Id
+
+```http
+  POST /api/rooms/
+```
+
+## Database Filter Utility module
 
 #### How to use
 
@@ -103,9 +104,9 @@ Import filter utility in a service and call the needed functions on
 3. tableName: string
 
 - FilterUtil.filter()
-  This is a utility function that filter the given table based on filter operators such as: 'gt (greater than)', 'lt (less than) and more. It takes three parameters and returns a filtered queryBulder
+  This is a utility function that filter the given table based on filter operators such as: `gt (greater than)`, `lt (less than)` and more. It takes three parameters and returns a filtered queryBulder
 
-1. qb: SelectQueryBuilder<any>
+1. qb: SelectQueryBuilder
 2. filters: Filter[]
 3. tableName: string
 

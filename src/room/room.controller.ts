@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseArrayPipe, ParseIntPipe, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { Queries } from './dto/interfaces';

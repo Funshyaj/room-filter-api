@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Room } from 'src/room/entities/room.entity';
+import { Room } from '../room/entities/room.entity';
 
 export default registerAs(
   'orm.config',
