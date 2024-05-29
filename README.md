@@ -49,38 +49,38 @@ $ npm run test:e2e
 
 #### Get all rooms
 
-```http
-  GET /api/rooms
+```
+  GET: /api/rooms
 ```
 
 #### Paginate rooms
 
-```http
-  GET /api/rooms?page=0&limit=10
+```
+  GET: /api/rooms?page=0&limit=10
 ```
 
 #### Sort rooms
 
 ```
-  GET /api/rooms?sort=[{feild:"feild-to-sort-by", order:"ASC or DESC"}]
+  GET: /api/rooms?sort=[{feild:"feild-to-sort-by", order:"ASC or DESC"}]
 ```
 
 #### filter rooms
 
 ```
-  GET /api/rooms?filter=[{"field":"userId","value":1,"operator":"equals"}]
+  GET: /api/rooms?filter=[{"field":"userId","value":1,"operator":"equals"}]
 ```
 
 ### Get room by Id
 
 ```
-  GET /api/rooms/${id}
+  GET: /api/rooms/${id}
 ```
 
 ### Get room by Id
 
-```http
-  POST /api/rooms/
+```
+  POST: /api/rooms/
 ```
 
 ## Database Filter Utility module
