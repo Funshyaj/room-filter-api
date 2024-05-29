@@ -34,7 +34,7 @@ Start the server in watch mode
   npm run start:dev
 ```
 
-<!-- ## Run Tests
+## Run Tests
 
 ```bash
 # unit tests
@@ -43,7 +43,7 @@ $ npm run test
 # e2e tests
 $ npm run test:e2e
 
-``` -->
+```
 
 ## API Reference
 
